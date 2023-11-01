@@ -16,6 +16,8 @@ export function Post ({ author, content, hashtags, publishedAt }) {
         addSuffix: true
     })
 
+    const newCommentIsEmpty = newCommentText.length == 0
+
     function handleCreateNewComment() {
         event.preventDefault()
         setComments([...comments, newCommentText])
@@ -23,6 +25,7 @@ export function Post ({ author, content, hashtags, publishedAt }) {
     }
 
     function handleNewCommentChange() {
+        event.target.setCustomValidity('')
         setNewCommentText(event.target.value)
     }
 
@@ -31,6 +34,10 @@ export function Post ({ author, content, hashtags, publishedAt }) {
             return comment !== commentToDelete
         })
         setComments(commentsWithoutDeletedOne)
+    }
+
+    function handleNewCommentOnInvalid() {
+        event.target.setCustomValidity('Esse campo é obrigatório!')
     }
 
     return (
@@ -64,10 +71,12 @@ export function Post ({ author, content, hashtags, publishedAt }) {
                     name='comment'
                     value={newCommentText}
                     onChange={handleNewCommentChange}
+                    onInvalid={handleNewCommentOnInvalid}
+                    required
                  />
                 
                 <footer>
-                    <button type='submit'>Publicar</button>
+                    <button type='submit' disabled={newCommentIsEmpty}>Publicar</button>
                 </footer>
             </form>
 
